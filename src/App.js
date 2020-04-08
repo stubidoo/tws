@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import './App.css'
-import {parseInstructions, buildGrid, updateHeading, move} from './lib'
+import {init} from './util'
 
 const INPUT = 
 `5 5
@@ -11,10 +11,9 @@ MMRMMRMRRM
 `
 
 const Point = ({item}) => {
-  const c = item.rover ? 'rover' : 'item'
-  const {pos, heading} = item
+  const c = item.roverId ? 'rover' : 'item'
   return (
-    <div className={c} data-testid={`${pos[0]} ${pos[1]} ${heading}`}></div>
+    <div className={c}></div>
   )
 }
 
@@ -23,54 +22,11 @@ export default class App extends Component {
     super(props)
     this.state = {
       grid: [],
-      instructions: null,
-      rovers: []
     }
   }
 
-  async componentDidMount(){
-    const {gridSize, rovers} = parseInstructions(INPUT)
-    const grid = buildGrid(gridSize[0], gridSize[1])
-    this.setState({
-      grid, rovers
-    }, this.init)
-  }
-
-  init() {
-    const {grid, rovers} = this.state
-    // console.log(grid, rovers)
-    
-    for(let r of rovers) {
-      let position = r[0].split(' ')
-      let heading = position.pop()
-
-      const temp = [...grid]
-      temp[parseInt(position[1])][parseInt(position[0])].rover = true
-      this.setState({
-        grid: temp
-      })
-  
-      const directions = r[1].split('')
-
-      for(let d of directions) {
-        if(d === 'L' || d === 'R') {
-          heading = updateHeading(heading, d)
-        }
-        if(d === 'M') {
-          const moveRes = move(
-            temp,
-            {x: parseInt(position[0]), y: parseInt(position[1])}, 
-            heading
-          )
-          
-          position = moveRes.points.pos
-          
-            this.setState({
-              grid: moveRes.grid
-            })
-        }
-      }
-    }
+  componentDidMount(){
+    this.setState({grid: init(INPUT).grid})
   }
 
   render() {

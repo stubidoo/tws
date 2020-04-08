@@ -1,4 +1,55 @@
+/**
+ * Description: 
+ * Main function runs all the heading, movement, instruction parse and grid functions
+ * Acceptance:
+ * - Should call parse instructions and set variable
+ * - Should call build grid and set variable
+ * - Should iterate over rovers
+ * - Each rover should have initial heading and position set
+ * - Each rover should accept movement instrucitons and move
+ * 
+ * Testing: 
+ * - Check if parse instructions called and variable set
+ * - Check - Should call build grid and set variable
+ * - Check - Should iterate over rovers
+ * - Check - Each rover should have initial heading and position set
+ * - Check - Each rover should accept movement instrucitons and move
+ */
+export const init = (INPUT) => {
+  const {gridSize, rovers} = parseInstructions(INPUT)
+  const grid = buildGrid(gridSize[0], gridSize[1])
 
+  let result = []
+  
+  rovers.forEach( (r, roverIndex) => {
+    let position = r[0].split(' ')
+    let heading = position.pop()
+    position = {x: parseInt(position[0]), y: parseInt(position[1])}
+    grid[position.y][position.x].roverId = roverIndex + 1
+    const directions = r[1].split('')
+
+    directions.forEach( (d, index) => {
+      if(d === 'L' || d === 'R') {
+        heading = updateHeading(heading, d)
+      }
+
+      if(d === 'M') {
+        position = move(position, heading)
+        grid[position.y][position.x].roverId = roverIndex + 1
+      }
+
+      if(directions.length - 1 === index) {
+        position.heading = heading
+        result.push(position)
+      }
+    })
+  })
+  
+  return {
+    output: convertResultsToStr(result),
+    grid
+  }
+}
 
 /**
  * Description: 
@@ -53,7 +104,7 @@ export const buildGrid = (x, y) => {
   for(let a = 0; a <= y; a++) {
     if(!arr[a]) arr[a] = []
     for(let b = 0; b <= x; b++) {
-      arr[a][b] = {pos:[b, a], rover: false, heading: ''}
+      arr[a][b] = {roverId: null}
     }
   }
   return arr
@@ -96,7 +147,6 @@ export const updateHeading = (currentHeading, direction) => {
   return newHeading
 }
 
-// heading = updateHeading('W', 'R')
 
 /**
  * Description:
@@ -109,35 +159,35 @@ export const updateHeading = (currentHeading, direction) => {
  * - Check that the movement inputs match the expected 
  */
 
-export const move = (grid, {x, y}, newHeading) => {
-    // grid[y][x].rover = false
+export const move = ({x, y}, newHeading) => {
   
-    switch (newHeading) {
-      case 'N':
-        y = y + 1
-        break;
-      case 'S':
-        y = y - 1
-        break;
-      case 'W':
-        x = x - 1
-        break;
-      case 'E':
-        x = x + 1
-        break;
-      default:
-        break;
-    }
-
-    grid[y][x].rover = true
-    grid[y][x].heading = newHeading
-
-
-    return {
-      points: grid[y][x],
-      grid: grid
-    }
-  
+  switch (newHeading) {
+    case 'N':
+      y = y + 1
+      break;
+    case 'S':
+      y = y - 1
+      break;
+    case 'W':
+      x = x - 1
+      break;
+    case 'E':
+      x = x + 1
+      break;
+    default:
+      break;
+  }
+  return {x,y}
 }
 
-// position = move({x: 1, y: 2}, 'W')
+export const convertResultsToStr = (result) => {
+  let str = ''
+
+  for(let obj of result) {
+    const arr = Object.values(obj)
+    arr.push('\n')
+    str+=arr.join(' ')
+  }
+
+  return str
+}

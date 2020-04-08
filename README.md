@@ -4,7 +4,7 @@
 
 Run `yarn` to install dependancies
 
-Run `yarn start' to run app
+Run `yarn start` to run app
 
 Run `yart test` to run unit tests
 

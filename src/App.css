@@ -52,6 +52,7 @@
   background-color: white;
   margin-left: 20px;
 }
+
 .numX {
   margin-top: 10px;
   width: 35px;
@@ -59,4 +60,8 @@
 
 .numY {
   margin-right: 10px;
+}
+
+p {
+  margin: 0;
 }

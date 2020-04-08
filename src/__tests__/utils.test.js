@@ -1,7 +1,5 @@
-import {parseInstructions, buildGrid, updateHeading, move} from '../lib'
-import {PARSED_INSTRUCTIONS, GENERATED_GRID} from '../mocks/lib-data'
-// const util = require('util')
-
+import {parseInstructions, buildGrid, updateHeading, move, init} from '../utils'
+import {PARSED_INSTRUCTIONS, GENERATED_GRID} from '../mocks/util-data'
 
 
 const INPUT = 
@@ -12,6 +10,8 @@ LMLMLMLMM
 MMRMMRMRRM
 `
 
+const OUTPUT =  ["1 3 N", "5 1 E"]
+
 const grid = buildGrid(5,5)
 
 test('Parsing instructions works', () => {
@@ -21,7 +21,6 @@ test('Parsing instructions works', () => {
 
 test('Builds 2D array based on grid coordinates', () => {
   expect(grid).toEqual(GENERATED_GRID)
-  // console.log(util.inspect(grid, {showHidden: false, depth: null}))
 })
 
 test('Updates heading according to given direction', () => {
@@ -40,8 +39,12 @@ test('Updates heading according to given direction', () => {
 
 test('Move function returns the correct coordinates', () => {
   const START = {x: 1, y: 2}
-  const position = move(grid, START, 'W')
-  expect(position.points).toEqual(
-    { pos: [ 0, 2 ], rover: true, heading:  'W'}
+  const position = move(START, 'W')
+  expect(position).toEqual(
+    {x: 0, y: 2}
   )
+})
+
+test('init function outputs the expected string', () => {
+  expect(init(INPUT).output).toEqual(OUTPUT)
 })

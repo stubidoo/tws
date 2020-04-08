@@ -85,8 +85,6 @@ export const parseInstructions = (input) => {
   return {gridSize, rovers}
 }
 
-// instructions = parseInstructions(INPUT)
-
 /**
  * Description:
  * Generate grid from first line of instructions
@@ -109,8 +107,6 @@ export const buildGrid = (x, y) => {
   }
   return arr
 }
-
-// grid = buildGrid(5,5)
 
 /**
  * Description:
@@ -181,13 +177,21 @@ export const move = ({x, y}, newHeading) => {
 }
 
 export const convertResultsToStr = (result) => {
-  let str = ''
+
+  /**
+   * 
+   * Issue:
+   * Issue matching the line break with Jest,
+   * Rather use array as output
+   */
+  
+  let output = []
 
   for(let obj of result) {
     const arr = Object.values(obj)
-    arr.push('\n')
-    str+=arr.join(' ')
+    // arr.push('\n')
+    output.push(arr.join(' '))
   }
 
-  return str
+  return output
 }

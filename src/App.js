@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from 'react'
+import React, {Fragment} from 'react'
 import './App.css'
-import {init} from './util'
+import {init} from './utils'
 
 const INPUT = 
 `5 5
@@ -10,30 +10,20 @@ LMLMLMLMM
 MMRMMRMRRM
 `
 
-const Point = ({item}) => {
-  const c = item.roverId ? 'rover' : 'item'
+const {grid, output} = init(INPUT)
+
+function App() {
   return (
-    <div className={c}></div>
-  )
-}
-
-export default class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      grid: [],
-    }
-  }
-
-  componentDidMount(){
-    this.setState({grid: init(INPUT).grid})
-  }
-
-  render() {
-    return (
-      <div className="container">
+    <div className="container">
+        <h4>Output:</h4>
+        {
+          output.map( (line, index) => (
+            <p key={index}>{line}</p>
+          ))
+        }
+        <br/>
       {
-        this.state.grid.reverse().map( (row, index) => (
+        grid.reverse().map( (row, index) => (
           <Fragment key={index}>
             <div className="row-group">
               <span className='numY'>{(row.length -1) - index}</span>
@@ -63,8 +53,17 @@ export default class App extends Component {
 
       Notes: <br/>
 
-      - Red dots indicate paths of the rovers
+      - Red dots indicate paths of the rovers <br/>
+      - See README for full description
     </div>
-    )
-  }
+  )
 }
+
+const Point = ({item}) => {
+  const c = item.roverId ? 'rover' : 'item'
+  return (
+    <div className={c}></div>
+  )
+}
+
+export default App
